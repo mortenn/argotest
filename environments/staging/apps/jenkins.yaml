@@ -11,6 +11,7 @@ spec:
     helm:
       parameters:
       valuesObject:
+        namespaceOverride: jenkins
         controller:
           ingress:
             enabled: true
