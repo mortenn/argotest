@@ -22,8 +22,10 @@ spec:
           value: "/"
         - name: ingress.tls.secretName
           value: "jenkins-tls"
-        - name: ingress.tls.hosts
-          array: ["jenkins.k3s1.runsafe.no"]
+        - array:
+            - jenkins.k3s1.runsafe.no
+          name: ingress.tls.hosts
+
     chart: jenkins
     repoURL: https://charts.jenkins.io
     targetRevision: 4.8.2
