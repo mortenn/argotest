@@ -9,7 +9,7 @@ spec:
   project: default
   source:
     helm:
-      parameters: {}
+      parameters:
       valuesObject:
         ingress:
           enabled: true
