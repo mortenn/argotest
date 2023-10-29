@@ -9,23 +9,19 @@ spec:
   project: default
   source:
     helm:
-      parameters:
-        - name: ingress.enabled
-          value: "true"
-        - name: "ingress.annotations.cert-manager\\.io/cluster-issuer"
-          value: "buypass-prod"
-        - name: ingress.hostName
-          value: "jenkins.k3s1.runsafe.no"
-        - name: ingress.ingressClassName
-          value: "nginx"
-        - name: ingress.path
-          value: "/"
-        - name: ingress.tls.secretName
-          value: "jenkins-tls"
-        - array:
-            - jenkins.k3s1.runsafe.no
-          name: ingress.tls.hosts
-
+      parameters: {}
+      valuesObject:
+        ingress:
+          enabled: true
+          annotations:
+            cert-manager.io/cluster-issuer: "buypass-prod"
+          hostName: jenkins.k3s1.runsafe.no
+          ingressClassName: nginx
+          path: "/"
+          tls:
+            - secretName: "jenkins-tls"
+              hosts:
+                - jenkins.k3s1.runsafe.no
     chart: jenkins
     repoURL: https://charts.jenkins.io
     targetRevision: 4.8.2
