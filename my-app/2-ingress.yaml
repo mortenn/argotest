@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-app
+  namespace: test
+  annotations:
+    cert-manager.io/cluster-issuer: buypass-prod
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - my-app.k3s1.runsafe.no
+      secretName: my-app-tls
+  rules:
+    - host: my-app.k3s1.runsafe.no
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx
+                port:
+                  number: 80
