@@ -1,0 +1,65 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dns
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bind9-service
+  namespace: dns
+  labels:
+    app: bind9
+spec:
+  selector:
+    app: bind9
+  ports:
+  - protocol: TCP
+    port: 5353
+    targetPort: 53
+    name: bind9-tcp
+  - protocol: UDP
+    port: 5353
+    targetPort: 53
+    name: bind9
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bind9-deployment
+  namespace: dns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bind9
+  template:
+    metadata:
+      labels:
+        app: bind9
+    spec:
+      containers:
+      - name: bind9
+        image: ubuntu/bind9:edge
+        ports:
+        - containerPort: 53
+          protocol: TCP
+        - containerPort: 53
+          protocol: UDP
+        volumeMounts:
+        - name: config
+          mountPath: "/etc/bind"
+          readOnly: true
+      volumes:
+      # You set volumes at the Pod level, then mount them into containers inside that Pod
+      - name: config
+        configMap:
+          # Provide the name of the ConfigMap you want to mount.
+          name: bind-config
+          # An array of keys from the ConfigMap to create as files
+          items:
+          - key: "named.conf"
+            path: "named.conf"
+          - key: "db.runsafe"
+            path: "db.runsafe"

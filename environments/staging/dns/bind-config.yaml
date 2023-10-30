@@ -1,0 +1,64 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bind-config
+  namespace: dns
+data:
+  named.conf: |
+    options {
+      directory "/var/cache/bind";
+
+      forwarders { 1.1.1.1; 1.0.0.1; };
+      
+      listen-on { any; };
+      listen-on-v6 { any; };
+      recursion yes;
+      dnssec-validation auto;
+    };
+    view "internal" {
+      match-clients { 10.0.0.0/8; };
+      recursion yes;
+      zone "runsafe.no" {
+        type master;
+        notify no;
+        file "/etc/bind/db.runsafe";
+      };
+      zone "100.0.10.in-addr.arpa." {
+        type forward;
+        forward only;
+        forwarders {
+          10.0.100.101;
+        };
+      };
+      include "/etc/bind/shared.conf";
+    };
+
+  db.runsafe: |
+    @       IN      SOA     localhost     hostmaster.runsafe.no (
+            2022021501      ; serial
+            30              ; refresh
+            60              ; retry
+            3600            ; expire
+            30              ; minimum
+    )
+
+    @       MX 10   saitama.runsafe.no.
+    @       MX 20   tatsumaki.runsafe.no.
+
+    @       TXT     "v=sp1 redirect=skviril.net"
+
+    holo            IN A    116.202.16.92
+    saitama         IN A    94.216.150.146
+    tatsumaki       IN A    78.47.113.202
+    washu           IN A    10.0.100.20
+    vmhost1         IN A    10.0.100.3
+    no              IN A    109.247.167.73
+    db              IN A    10.0.30.9
+    sgwi            CNAME   holo.runsafe.no.
+    web.dmz         IN A    10.0.30.3
+    minecraft.dmz   IN A    10.0.30.6
+
+    www             CNAME   web.dmz.runsafe.no.
+    minecraft       CNAME   minecraft.dmz.runsafe.no.
+    *.minecraft     CNAME   minecraft.dmz.runsafe.no.
