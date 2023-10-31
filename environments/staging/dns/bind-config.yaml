@@ -31,7 +31,6 @@ data:
           10.0.100.101;
         };
       };
-      include "/etc/bind/shared.conf";
     };
 
   db.runsafe: |
