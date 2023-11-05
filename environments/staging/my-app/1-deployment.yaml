@@ -17,7 +17,11 @@ spec:
         app: my-app
     spec:
       containers:
-        - name: nginx
+        - name: my-app
           image: nginx:1.25.3
           ports:
             - containerPort: 80
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
