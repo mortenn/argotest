@@ -12,14 +12,14 @@ spec:
   rules:
   - http:
       paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: nginx
-              port:
-                number: 80
-      host: my-app.k3s1.runsafe.no
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: my-app-server
+            port:
+              name: http
+    host: my-app.k3s1.runsafe.no
   tls:
   - hosts:
     - my-app.k3s1.runsafe.no
