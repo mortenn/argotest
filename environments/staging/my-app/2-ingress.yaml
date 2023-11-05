@@ -11,15 +11,15 @@ spec:
   ingressClassName: nginx
   rules:
   - http:
-    paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: nginx
-            port:
-              number: 80
-    host: my-app.k3s1.runsafe.no
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: nginx
+              port:
+                number: 80
+      host: my-app.k3s1.runsafe.no
   tls:
   - hosts:
     - my-app.k3s1.runsafe.no
