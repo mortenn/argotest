@@ -6,7 +6,6 @@ metadata:
   name: my-app
   namespace: foo
 spec:
-  clusterIP: None
   ports:
     - port: 80
   selector:
