@@ -32,3 +32,56 @@ spec:
       - CreateNamespace=false
       - PrunePropagationPolicy=foreground
       - PruneLast=true
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argocd-server-http-ingress
+  namespace: argocd
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    cert-manager.io/cluster-issuer: "buypass-prod"
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: argocd-server
+            port:
+              name: http
+    host: argocd.k3s1.runsafe.no
+  tls:
+  - hosts:
+    - argocd.k3s1.runsafe.no
+    secretName: argocd-ingress-http
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argocd-server-grpc-ingress
+  namespace: argocd
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+    cert-manager.io/cluster-issuer: "buypass-prod"
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: argocd-server
+            port:
+              name: https
+    host: argocd-grpc.k3s1.runsafe.no
+  tls:
+  - hosts:
+    - argocd-grpc.k3s1.runsafe.no
+    secretName: argocd-ingress-grpc

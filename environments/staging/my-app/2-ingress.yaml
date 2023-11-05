@@ -3,9 +3,11 @@ kind: Ingress
 metadata:
   name: my-app
   namespace: foo
-  annotations:
-    cert-manager.io/cluster-issuer: buypass-prod
 spec:
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    cert-manager.io/cluster-issuer: buypass-prod
   ingressClassName: nginx
   tls:
     - hosts:
