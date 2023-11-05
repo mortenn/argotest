@@ -16,7 +16,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: my-app-server
+            name: my-app
             port:
               name: http
     host: my-app.k3s1.runsafe.no
