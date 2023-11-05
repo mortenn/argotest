@@ -3,24 +3,24 @@ kind: Ingress
 metadata:
   name: my-app
   namespace: foo
-spec:
   annotations:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
     cert-manager.io/cluster-issuer: buypass-prod
+spec:
   ingressClassName: nginx
-  tls:
-    - hosts:
-        - my-app.k3s1.runsafe.no
-      secretName: my-app-tls
   rules:
-    - host: my-app.k3s1.runsafe.no
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: nginx
-                port:
-                  number: 80
+  - http:
+    paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx
+            port:
+              number: 80
+    host: my-app.k3s1.runsafe.no
+  tls:
+  - hosts:
+    - my-app.k3s1.runsafe.no
+    secretName: my-app-tls
