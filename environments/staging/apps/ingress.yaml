@@ -15,11 +15,18 @@ spec:
   source:
     helm:
       parameters:
-
       valuesObject:
-        additionalArguments:
-        - "--entryPoints.udp.address=:53/udp"
-        - "--entryPoints.tcp.address=:53/tcp"
+        ports:
+          dns:
+            port: 53
+            expose: true
+            exposedPort: 53
+            protocol: udp
+          dns-tcp:
+            port: 53
+            expose: true
+            exposedPort: 53
+            protocol: tcp
     chart: traefik
     repoURL: https://traefik.github.io/charts
     targetRevision: 25.0.0

@@ -75,7 +75,7 @@ metadata:
   namespace: dns
 spec:
   entryPoints:
-    - udp
+    - dns
   routes:
   - services:
     - name: bind9-service
@@ -88,7 +88,7 @@ metadata:
   namespace: dns
 spec:
   entryPoints:
-    - tcp
+    - dns-tcp
   routes:
   - match: ClientIP(`0.0.0.0/0`,`::/0`)
     services:
