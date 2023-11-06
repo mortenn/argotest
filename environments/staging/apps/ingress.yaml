@@ -6,7 +6,7 @@ metadata:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: ingress-nginx
+  name: ingress-traefik
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -17,26 +17,9 @@ spec:
       parameters:
 
       valuesObject:
-        namespaceOverride: ingress
-        service:
-          type: LoadBalancer
-        controller:
-          enableCustomResources: true
-          globalConfiguration:
-            create: true
-            spec:
-              listeners:
-              - name: dns-udp
-                port: 5353
-                protocol: udp
-              - name: dns-tcp
-                port: 5353
-                protocol: tcp
-        udp:
-        - "53"
-    chart: nginx-ingress-controller
-    repoURL: https://charts.bitnami.com/bitnami
-    targetRevision: 9.9.2
+    chart: traefik
+    repoURL: https://traefik.github.io/charts
+    targetRevision: 25.0.0
   destination:
     server: https://kubernetes.default.svc
   syncPolicy:
@@ -50,63 +33,29 @@ spec:
       - PrunePropagationPolicy=foreground
       - PruneLast=true
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
 metadata:
-  name: argocd-server-http-ingress
+  name: argocd-server
   namespace: argocd
   annotations:
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
     cert-manager.io/cluster-issuer: "buypass-prod"
 spec:
-  ingressClassName: nginx
-  rules:
-  - http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: argocd-server
-            port:
-              name: http
-    host: argocd.k3s1.runsafe.no
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`argocd.k3s1.runsafe.no`)
+      priority: 10
+      services:
+        - name: argocd-server
+          port: 80
+    - kind: Rule
+      match: Host(`argocd.k3s1.runsafe.no`) && Headers(`Content-Type`, `application/grpc`)
+      priority: 11
+      services:
+        - name: argocd-server
+          port: 80
+          scheme: h2c
   tls:
-  - hosts:
-    - argocd.k3s1.runsafe.no
     secretName: argocd-ingress-http
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: argocd-server-grpc-ingress
-  namespace: argocd
-  annotations:
-    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
-    cert-manager.io/cluster-issuer: "buypass-prod"
-spec:
-  ingressClassName: nginx
-  rules:
-  - http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: argocd-server
-            port:
-              name: https
-    host: argocd-grpc.k3s1.runsafe.no
-  tls:
-  - hosts:
-    - argocd-grpc.k3s1.runsafe.no
-    secretName: argocd-ingress-grpc
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: udp-services
-  namespace: ingress-nginx
-data:
-  53: "dns/bind9-service:53"
