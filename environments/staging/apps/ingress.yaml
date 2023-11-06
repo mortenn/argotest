@@ -17,6 +17,9 @@ spec:
       parameters:
 
       valuesObject:
+        additionalArguments:
+        - "--entryPoints.udp.address=:53/udp"
+        - "--entryPoints.tcp.address=:53/tcp"
     chart: traefik
     repoURL: https://traefik.github.io/charts
     targetRevision: 25.0.0

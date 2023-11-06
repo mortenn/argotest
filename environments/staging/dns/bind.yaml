@@ -68,22 +68,6 @@ spec:
           - key: "db.runsafe"
             path: "db.runsafe"
 ---
-apiVersion: helm.cattle.io/v1
-kind: HelmChartConfig
-metadata:
-  name: traefik
-  namespace: kube-system
-spec:
-  valuesContent: |-
-    additionalArguments:
-    - "--entryPoints.udp.address=:53/udp"
-    - "--entryPoints.tcp.address=:53/tcp"
-  entryPoints:
-    udp:
-      address: ':53/udp'
-    tcp:
-      address: ':53/tcp'
----
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRouteUDP
 metadata:
