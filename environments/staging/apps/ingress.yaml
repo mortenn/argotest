@@ -21,12 +21,12 @@ spec:
             port: 53
             expose: true
             exposedPort: 53
-            protocol: udp
+            protocol: UDP
           dns-tcp:
             port: 53
             expose: true
             exposedPort: 53
-            protocol: tcp
+            protocol: TCP
     chart: traefik
     repoURL: https://traefik.github.io/charts
     targetRevision: 25.0.0
