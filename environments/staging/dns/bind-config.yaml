@@ -42,7 +42,7 @@ data:
             30              ; minimum
     )
 
-    @       NS      localhost
+    @       NS      localhost.
 
     @       MX 10   saitama.runsafe.no.
     @       MX 20   tatsumaki.runsafe.no.
