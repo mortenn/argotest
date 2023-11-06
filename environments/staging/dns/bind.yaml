@@ -82,6 +82,7 @@ spec:
     udp:
       address: ':53/udp'
 ---
+apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRouteUDP
 metadata:
   name: udp
@@ -93,6 +94,7 @@ spec:
     - name: bind9-service
       port: 53
 ---
+apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRouteTCP
 metadata:
   name: tcp
