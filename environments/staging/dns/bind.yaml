@@ -106,6 +106,7 @@ spec:
   entryPoints:
     - tcp
   routes:
-  - services:
+  - match: ClientIP(`0.0.0.0/0`,`::/0`)
+    services:
     - name: bind9-service
       port: 53
