@@ -86,6 +86,7 @@ apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRouteUDP
 metadata:
   name: udp
+  namespace: dns
 spec:
   entryPoints:
     - udp
@@ -98,6 +99,7 @@ apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRouteTCP
 metadata:
   name: tcp
+  namespace: dns
 spec:
   entryPoints:
     - tcp
