@@ -15,10 +15,25 @@ spec:
   source:
     helm:
       parameters:
+
       valuesObject:
         namespaceOverride: ingress
         service:
           type: LoadBalancer
+        controller:
+          enableCustomResources: true
+          globalConfiguration:
+            create: true
+            spec:
+              listeners:
+              - name: dns-udp
+                port: 5353
+                protocol: udp
+              - name: dns-tcp
+                port: 5353
+                protocol: tcp
+        udp:
+        - 53
     chart: nginx-ingress-controller
     repoURL: https://charts.bitnami.com/bitnami
     targetRevision: 9.9.2
@@ -87,3 +102,11 @@ spec:
   - hosts:
     - argocd-grpc.k3s1.runsafe.no
     secretName: argocd-ingress-grpc
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: udp-services
+  namespace: ingress-nginx
+data:
+  53: "dns/bind9-service:53"
