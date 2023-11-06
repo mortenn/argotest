@@ -79,7 +79,7 @@ spec:
   routes:
   - services:
     - name: bind9-service
-      port: 53
+      port: 5353
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRouteTCP
@@ -93,4 +93,4 @@ spec:
   - match: ClientIP(`0.0.0.0/0`,`::/0`)
     services:
     - name: bind9-service
-      port: 53
+      port: 5353
