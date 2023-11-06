@@ -81,11 +81,13 @@ spec:
   entryPoints:
     udp:
       address: ':53/udp'
+    tcp:
+      address: ':53/tcp'
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRouteUDP
 metadata:
-  name: udp
+  name: bind9-udp-ingress
   namespace: dns
 spec:
   entryPoints:
@@ -98,7 +100,7 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRouteTCP
 metadata:
-  name: tcp
+  name: bind9-tcp-ingress
   namespace: dns
 spec:
   entryPoints:
