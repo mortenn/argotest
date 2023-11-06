@@ -51,6 +51,10 @@ spec:
         - name: config
           mountPath: "/etc/bind"
           readOnly: true
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
       volumes:
       # You set volumes at the Pod level, then mount them into containers inside that Pod
       - name: config
@@ -63,3 +67,39 @@ spec:
             path: "named.conf"
           - key: "db.runsafe"
             path: "db.runsafe"
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChartConfig
+metadata:
+  name: traefik
+  namespace: kube-system
+spec:
+  valuesContent: |-
+    additionalArguments:
+    - "--entryPoints.udp.address=:53/udp"
+    - "--entryPoints.tcp.address=:53/tcp"
+  entryPoints:
+    udp:
+      address: ':53/udp'
+---
+kind: IngressRouteUDP
+metadata:
+  name: udp
+spec:
+  entryPoints:
+    - udp
+  routes:
+  - services:
+    - name: bind9-service
+      port: 53
+---
+kind: IngressRouteTCP
+metadata:
+  name: tcp
+spec:
+  entryPoints:
+    - tcp
+  routes:
+  - services:
+    - name: bind9-service
+      port: 53
