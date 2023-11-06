@@ -18,7 +18,7 @@ spec:
           service:
             name: my-app-service
             port:
-              name: 8080
+              number: 8080
     host: my-app.k3s1.runsafe.no
   tls:
   - hosts:
